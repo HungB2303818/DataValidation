@@ -14,8 +14,8 @@ namespace IdentityValidationApp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Cập nhật chuỗi kết nối MySQL khớp với máy của bạn
-            string connectionString = "Server=127.0.0.1;Port=3306;Database=IdentityValidationDb;User=root;Password=your_password;";
+            // Cập nhật chuỗi kết nối MySQL khớp với máy
+            string connectionString = "Server=127.0.0.1;Port=3306;Database=IdentityValidationDb;User=root;Password=root;";
             var repository = new CitizenRepository(connectionString);
 
             var form = new UserInfoForm();
