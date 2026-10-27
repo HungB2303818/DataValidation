@@ -5,11 +5,15 @@ namespace IdentityValidationApp.Views
 {
     public interface IUserInfoView
     {
-        string PersonalId { get; }
-        string Email { get; }
-        string PhoneNumber { get; }
+        int CitizenId { get; set; }
+        string FullName { get; set; }
+        string PersonalId { get; set; }
+        string Email { get; set; }
+        string PhoneNumber { get; set; }
+        string StartDate { get; set; }
 
         void ShowResult(bool isValid, Dictionary<string, string> errors, string customMessage = "");
+        void CloseView(); // Bổ sung phương thức đóng Form
 
         event EventHandler? ValidateRequested;
     }

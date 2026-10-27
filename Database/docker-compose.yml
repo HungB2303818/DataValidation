@@ -1,0 +1,18 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_identity_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: IdentityValidationDb
+    ports:
+      - "3306:3306"
+    volumes:
+      # Tự động thực thi kịch bản init.sql khi container khởi tạo lần đầu
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # Lưu trữ dữ liệu lâu dài không bị mất khi stop container
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

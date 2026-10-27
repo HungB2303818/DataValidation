@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 using MySqlConnector;
 using IdentityValidationApp.Views;
 using IdentityValidationApp.Models;
@@ -21,14 +22,18 @@ namespace IdentityValidationApp.Controllers
 
         private async void OnValidateRequested(object? sender, EventArgs e)
         {
+            // Trích xuất dữ liệu từ View bao gồm cả FullName, StartDate và CitizenId
             var model = new CitizenModel
             {
+                Id = _view.CitizenId,
+                FullName = _view.FullName,
                 PersonalId = _view.PersonalId,
                 Email = _view.Email,
-                PhoneNumber = _view.PhoneNumber
+                PhoneNumber = _view.PhoneNumber,
+                StartDate = _view.StartDate
             };
 
-            // 1. Kiểm tra định dạng phía ứng dụng bằng Reflection
+            // 1. Kiểm tra định dạng phía ứng dụng bằng Custom Attributes & Reflection Validator
             ValidationResult result = ReflectionValidator.Validate(model);
             if (!result.IsValid)
             {
@@ -36,13 +41,23 @@ namespace IdentityValidationApp.Controllers
                 return;
             }
 
-            // 2. Lưu vào MySQL bằng Parameterized Query
+            // 2. Lưu mới hoặc Cập nhật vào MySQL
             try
             {
-                bool isInserted = await _repository.InsertCitizenAsync(model);
-                if (isInserted)
+                bool isSuccess = model.Id == 0
+                    ? await _repository.InsertCitizenAsync(model)
+                    : await _repository.UpdateCitizenAsync(model);
+
+                if (isSuccess)
                 {
-                    _view.ShowResult(true, result.Errors, "Xác thực hợp lệ & Đã lưu vào MySQL thành công!");
+                    string successMsg = model.Id == 0
+                        ? "Thêm mới thông tin nhân viên thành công!"
+                        : "Cập nhật thông tin nhân viên thành công!";
+
+                    MessageBox.Show(successMsg, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Đóng dialog sau khi hoàn tất
+                    _view.CloseView();
                 }
             }
             catch (MySqlException ex) when (ex.ErrorCode == MySqlErrorCode.DuplicateKeyEntry)
@@ -52,7 +67,7 @@ namespace IdentityValidationApp.Controllers
             }
             catch (Exception ex)
             {
-                result.Errors["Database"] = $"Lỗi kết nối MySQL: {ex.Message}";
+                result.Errors["Database"] = $"Lỗi kết nối / xử lý MySQL: {ex.Message}";
                 _view.ShowResult(false, result.Errors);
             }
         }
