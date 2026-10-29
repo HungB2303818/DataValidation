@@ -1,9 +1,3 @@
--- =============================================================================
--- KỊCH BẢN KHỞI TẠO CƠ SỞ DỮ LIỆU - CT287 KIỂM CHỨNG MÔ HÌNH (BUỔI 03)
--- Dự án: IdentityValidationApp (C# WinForms .NET 8 - MVP)
--- Cơ chế: Defense-in-Depth Validation (Phòng thủ đa tầng trên MySQL 8.0+)
--- =============================================================================
-
 -- 1. Tạo Cơ sở dữ liệu IdentityValidationDb
 CREATE DATABASE IF NOT EXISTS IdentityValidationDb
 CHARACTER SET utf8mb4

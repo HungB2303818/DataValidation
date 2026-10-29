@@ -19,7 +19,7 @@ namespace IdentityValidationApp.Attributes
 
     public class PersonalIdAttribute : RegexValidationAttribute
     {
-        public PersonalIdAttribute() : base(
+        public PersonalIdAttribute() :   base(
             "Số định danh (CCCD)",
             @"^\d{12}$",
             "Số định danh phải bao gồm đúng 12 chữ số.")
